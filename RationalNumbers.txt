@@ -1,0 +1,59 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class Rational implements Comparable<Rational> {
+    private long numerator;
+    private long denominator;
+
+    public Rational(long numerator, long denominator) {
+        if (denominator == 0) {
+            throw new IllegalArgumentException("Denominator cannot be zero.");
+        }
+    
+        long common = gcd(Math.abs(numerator), Math.abs(denominator));
+     
+        if (denominator < 0) {
+            this.numerator = -numerator / common;
+            this.denominator = -denominator / common;
+        } else {
+            this.numerator = numerator / common;
+            this.denominator = denominator / common;
+        }
+    }
+
+        private static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
+    @Override
+    public int compareTo(Rational other) {
+        // Cross-multiply to avoid floating-point precision issues
+        long thisVal = this.numerator * other.denominator;
+        long otherVal = other.numerator * this.denominator;
+        return Long.compare(thisVal, otherVal);
+    }
+
+    @Override
+    public String toString() {
+        if (denominator == 1) {
+            return String.valueOf(numerator);
+        }
+        return numerator + "/" + denominator;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+       
+        List<Rational> numbers = new ArrayList<>();
+        numbers.add(new Rational(3, 4));
+        numbers.add(new Rational(1, 2));
+        numbers.add(new Rational(7, 8));
+        numbers.add(new Rational(2, 5));
+
+        System.out.println("Unsorted: " + numbers);
+        Collections.sort(numbers);
+
+        System.out.println("Sorted:   " + numbers);
+    }
+}
